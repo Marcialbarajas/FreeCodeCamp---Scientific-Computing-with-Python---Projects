@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sat Mar 20 20:55:42 2021
+Created on Sun Mar 21 18:15:28 2021
 
 @author: Marcial
 """
 
 def truncate(n):
-    return int(n*10)/10
+    multiplier = 10
+    return int(n * multiplier) / multiplier
 
 def getTotals(categories):
     total = 0
@@ -19,49 +20,50 @@ def getTotals(categories):
 
 def create_spend_chart(categories):
 
-  res = "Porcentaje gastado por categoria\n"
-  i = 100
-  totals = getTotals(categories)
-  while i >= 0:
-        cat_spaces = " "
-        for total in totals:
-            if total * 100 >= i:
-                cat_spaces += "o  "
-            else:
-                cat_spaces += "   "
-        res+= str(i).rjust(3) + "|" + cat_spaces + ("\n")
-        i-=10
-    
-  dashes = "-" + "---"*len(categories)
-  names = []
-  x_axis = ""
-  for category in categories:
-        names.append(category.name)
-
-  maxi = max(names, key=len)
-
-  for x in range(len(maxi)):
-      nameStr = '     '
-      for name in names:
-            if x >= len(name):
-                nameStr += "   "
-            else:
-                nameStr += name[x] + "  "
+    res = "Percentage spent by category\n"
+    i = 100
+    totals = getTotals(categories)
+    while i >= 0:
+          cat_spaces = " "
+          for total in totals:
+              if total * 100 >= i:
+                  cat_spaces += "o  "
+              else:
+                  cat_spaces += "   "
+          res+= str(i).rjust(3) + "|" + cat_spaces + ("\n")
+          i-=10
       
-      if(x != len(maxi) -1 ):
-        nameStr += '\n'
+    dashes = "-" + "---"*len(categories)
+    names = []
+    x_axis = ""
+    for category in categories:
+          names.append(category.name)
 
+    maxi = max(names, key=len)
+
+    for x in range(len(maxi)):
+        nameStr = '     '
+        for name in names:
+              if x >= len(name):
+                  nameStr += "   "
+              else:
+                  nameStr += name[x] + "  "
         
-      x_axis += nameStr
+        if(x != len(maxi) -1 ):
+          nameStr += '\n'
 
-  res+= dashes.rjust(len(dashes)+4) + "\n" + x_axis
-  return res
+          
+        x_axis += nameStr
+
+    res+= dashes.rjust(len(dashes)+4) + "\n" + x_axis
+    return res
 
 class Category:
 
+
   def __init__(self, name):
       self.name = name
-      self.ledger=list()
+      self.ledger = list()
 
   def __str__(self):
       title = f"{self.name:*^30}\n"
@@ -76,12 +78,11 @@ class Category:
       return output
 
   def deposit(self, amount, description=""):
+
       self.ledger.append({"amount": amount, "description": description})
-    
-      return None
+
 
   def withdraw(self, amount, description=""):
-
 
       if(self.check_funds(amount)):
         self.ledger.append({"amount": -amount, "description": description})
@@ -97,6 +98,7 @@ class Category:
 
       return total_cash
 
+
   def transfer(self, amount, category):
 
       if(self.check_funds(amount)):
@@ -104,14 +106,14 @@ class Category:
         category.deposit(amount, "Transfer from " + self.name)
         return True
       return False
-
+      
 
   def check_funds(self, amount):
 
       if(self.get_balance() >= amount):
         return True
       return False
-
+      
   ### Category method
   def get_withdrawls(self):
       total = 0
@@ -119,4 +121,5 @@ class Category:
           if item["amount"] < 0:
               total+= item["amount"]
       return total
-      
+
+
